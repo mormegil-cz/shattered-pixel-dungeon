@@ -1,6 +1,8 @@
 name: Update customized from master
 
 on:
+  workflow_dispatch:
+
   push:
     branches:
       - master
