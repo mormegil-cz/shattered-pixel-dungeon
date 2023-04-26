@@ -1,0 +1,20 @@
+name: Update customized from master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with: 
+          ref: 'customized'
+      - name: Rebase branch on master
+        run: |
+          git fetch origin
+          git rebase origin/master
+          git push --force-with-lease origin customized
