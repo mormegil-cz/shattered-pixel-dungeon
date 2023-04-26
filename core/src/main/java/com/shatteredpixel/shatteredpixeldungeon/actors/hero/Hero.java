@@ -188,7 +188,7 @@ public class Hero extends Char {
 	
 	public static final int MAX_LEVEL = 30;
 
-	public static final int STARTING_STR = 10;
+	public static final int STARTING_STR = 18;
 	
 	private static final float TIME_TO_REST		    = 1f;
 	private static final float TIME_TO_SEARCH	    = 2f;
@@ -232,7 +232,7 @@ public class Hero extends Char {
 	public Hero() {
 		super();
 
-		HP = HT = 20;
+		HP = HT = 80;
 		STR = STARTING_STR;
 		
 		belongings = new Belongings( this );
@@ -704,7 +704,7 @@ public class Hero extends Char {
 		}
 
 		speed = AscensionChallenge.modifyHeroSpeed(speed);
-		
+
 		return speed;
 		
 	}
@@ -2084,11 +2084,30 @@ public class Hero extends Char {
 
 			}
 			return;
+		} else {
+
+			interrupt();
+			resting = false;
+
+			this.HP = HT * 2 / 3;
+			this.STR++;
+
+			PotionOfHealing.cure(this);
+			Buff.prolong(this, Invulnerability.class, Invulnerability.DURATION);
+
+			SpellSprite.show(this, SpellSprite.ANKH);
+			GameScene.flash(0x80FFFF40);
+			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
+			GLog.w(Messages.get(this, "revive"));
+			Statistics.ankhsUsed++;
+			Catalog.countUse(Ankh.class);
+
+			return;
 		}
-		
-		Actor.fixTime();
-		super.die( cause );
-		reallyDie( cause );
+
+//		Actor.fixTime();
+//		super.die( cause );
+//		reallyDie( cause );
 	}
 	
 	public static void reallyDie( Object cause ) {
@@ -2430,6 +2449,7 @@ public class Hero extends Char {
 		}
 		
 		if (intentional) {
+			new ScrollOfMagicMapping().collect();
 			sprite.showStatus( CharSprite.DEFAULT, Messages.get(this, "search") );
 			sprite.operate( pos );
 			if (!Dungeon.level.locked) {
