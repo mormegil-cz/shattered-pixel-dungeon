@@ -18,5 +18,7 @@ jobs:
       - name: Rebase branch on master
         run: |
           git fetch --unshallow
+          git config --local user.name "${GITHUB_ACTOR}"
+          git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git rebase origin/master
           git push --force-with-lease origin customized
