@@ -17,7 +17,6 @@ jobs:
           ref: 'customized'
       - name: Rebase branch on master
         run: |
-          git fetch origin
-          git checkout customized
+          git fetch --unshallow
           git rebase origin/master
           git push --force-with-lease origin customized
