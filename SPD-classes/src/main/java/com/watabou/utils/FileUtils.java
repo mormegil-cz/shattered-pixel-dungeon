@@ -198,8 +198,13 @@ public class FileUtils {
 	
 	//only works for base path
 	public static void bundleToFile( String fileName, Bundle bundle ) throws IOException{
+		bundleToFile(fileName, Files.FileType.Local, bundle);
+		bundleToFile(fileName, Files.FileType.External, bundle);
+	}
+
+	public static void bundleToFile(String fileName, Files.FileType fileType, Bundle bundle ) throws IOException{
 		try {
-			FileHandle file = getFileHandle(fileName);
+			FileHandle file = getFileHandle(fileType, fileName);
 
 			//write to a temp file, then move the files.
 			// This helps prevent save corruption if writing is interrupted
@@ -217,7 +222,7 @@ public class FileUtils {
 			throw new IOException(e);
 		}
 	}
-	
+
 	private static void bundleToStream( OutputStream output, Bundle bundle ) throws IOException{
 		Bundle.write( bundle, output );
 		output.close();
